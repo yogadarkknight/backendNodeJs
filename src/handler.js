@@ -2,6 +2,7 @@ const {nanoid} = require('nanoid');
 
 const books = require('./books');
 
+//Menambahkan Buku
 const addBookHandler = (request, h) => {
     const {name, year, author, summary, publisher, pageCount, readPage, reading} = request.payload;
     const id = nanoid(16);
@@ -19,6 +20,7 @@ const addBookHandler = (request, h) => {
             message: 'Gagal menambahkan buku. Mohon isi nama buku',
         });
         response.code (400);
+        console.log(response);
         return response;
     }
 
@@ -28,6 +30,7 @@ const addBookHandler = (request, h) => {
             message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount'
         });
         response.code(400);
+        console.log(response);
         return response;
     }
 
@@ -45,6 +48,7 @@ const addBookHandler = (request, h) => {
             },
         });
         response.code(201);
+        console.log(response);
         return response;
     }
     const response = h.response ({
@@ -52,9 +56,11 @@ const addBookHandler = (request, h) => {
         message: 'buku gagal ditambahkan'
     });
     response.code(500);
+    console.log(response);
     return response;
 };
 
+//Melihat List Semua Buku
 const getBookHandler = (request, h) => ({
     status: 'success',
     data: {
@@ -66,6 +72,7 @@ const getBookHandler = (request, h) => ({
     }
 });
 
+// Melihat Detail Buku dari ID Buku
 const getBookbyIdHandler = (request, h) => {
     const {bookId} = request.params;
     const book = books.filter((b) => b.id === bookId)[0];
@@ -83,9 +90,11 @@ const getBookbyIdHandler = (request, h) => {
         message: 'Buku tidak ditemukan'
     });
     response.code(404);
+    console.log(response);
     return response;
 };
 
+//Mengedit Detail Buku berdasarkan ID
 const editBookByIdHandler = (request, h) => {
     const {bookId} = request.params;
     const {name, year, author, summary, publisher, pageCount, readPage, reading} = request.payload;
@@ -98,7 +107,9 @@ const editBookByIdHandler = (request, h) => {
             message: 'Gagal memperbarui buku. Id tidak ditemukan'
         });
         response.code(404);
+        console.log(response);
         return response;
+       
         }
         
     else if (name === undefined){
@@ -107,6 +118,7 @@ const editBookByIdHandler = (request, h) => {
                 message: 'Gagal memperbarui buku. Mohon isi nama buku'
             });
             response.code(400);
+            console.log(response);
             return response;
         }
     else if( readPage > pageCount ){
@@ -115,22 +127,34 @@ const editBookByIdHandler = (request, h) => {
                     message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount'
                 });
                 response.code(400);
+                console.log(response);
                 return response;
             }
 
-        /*  books[index] = {
-                
+         books[index] = {
+               ...books[index],
+               name,
+               year,
+               author,
+               summary,
+               publisher,
+               pageCount,
+               readPage,
+               reading,
+               updatedAt 
             
-            }; */
+            }; 
             const response = h.response({
                 status: 'success',
                 message: 'Buku berhasil diperbarui'
             });
             response.code(200);
+            console.log(response);
             return response;
 
 };
 
+//Menghapus Buku dari ID-nya
 const deleteBookByIdHandler = (request, h) => {
     const {bookId} = request.params;
     const index = books.findIndex((book) => book.id === bookId);
@@ -142,6 +166,7 @@ const deleteBookByIdHandler = (request, h) => {
             message: 'Buku berhasil dihapus'
         });
         response.code(200);
+        console.log(response);
         return response;
     }
     const response = h.response ({
@@ -149,6 +174,7 @@ const deleteBookByIdHandler = (request, h) => {
         message: 'Buku gagal dihapus. Id tidak ditemukan'
     });
     response.code(404);
+    console.log(response);
     return response;
 }
 
